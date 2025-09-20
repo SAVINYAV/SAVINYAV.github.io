@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>sqrt calc</title>
+    <style>
+    
+    *{ box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        padding: 1.25rem;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        background-image: url("background.jpg");
+        background-size: cover;
+        background-position: center;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    .main {
+        width: 100%;
+        max-width: 720px;
+        background-color: rgba(206,206,206,0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(95,95,95,0.5);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        padding: 1.25rem;
+        margin: 1rem 0;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    #titleTxt {
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+        color: #111;
+    }
+
+    #infoTxt {
+        font-size: 1.2rem;
+        color: rgb(48, 48, 48);
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.25rem;
+    }
+
+    #inputTxt {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #111;
+    }
+
+    #input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000;
+        border: 1px solid #6e6e6e;
+        border-radius: 10px;
+        text-align: center;
+        background: rgba(255,255,255,0.95);
+    }
+
+    .cont1 {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #precisionLabel {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #111;
+    }
+
+    #precision {
+        padding: 0.5rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000;
+        border: 1px solid #6e6e6e;
+        border-radius: 8px;
+        width: 22%;
+        min-width: 78px;
+        text-align: center;
+        background: white;
+    }
+
+    #calcBtn {
+        flex: 1;
+        padding: 0.6rem 0.9rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        background-color: #fff;
+        border: 1px solid #858585;
+        cursor: pointer;
+        transition: background-color .2s ease;
+    }
+
+    #calcBtn:hover { background-color: #e9e9e9; }
+
+    #langBtn {
+        align-self: center;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        border-radius: 6px;
+        background: white;
+        border: 1px solid #888;
+        margin-bottom: 0.5rem;
+    }
+
+    #error {
+        color: red;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-align: center;
+        min-height: 1.2em;
+    }
+
+    #result {
+        margin-top: 0.5rem;
+        background-color: rgba(255,255,255,0.95);
+        padding: 0.9rem;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        min-height: 4.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        color: #2c3e50;
+    }
+
+    .resultItem {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        padding: 0.45rem 0.6rem;
+        background: rgba(202,202,202,0.7);
+        border-radius: 8px;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .resultValue {
+        font-weight: 700;
+        color: #4CAF50;
+        font-size: 1rem;
+    }
+
+    @media (max-width: 540px) {
+        #titleTxt { font-size: 1.25rem; }
+        #infoTxt { font-size: 0.95rem; }
+        #input { font-size: 1.05rem; padding: 1rem; }
+        #precision { font-size: 1rem; width: 34%; min-width: 72px; }
+        #calcBtn { font-size: 1.05rem; padding: 0.9rem; }
+        #result { font-size: 1rem; padding: 0.9rem; min-height: 6rem; }
+        .resultValue { font-size: 1.05rem; }
+        .cont1 { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+    <div class="main">
+    <div class="content">
+        <div id="titleTxt">Калькулятор квадратных корней</div>
+        <button id="langBtn">English</button>
+        <div id="infoTxt">Вычисляет квадратные корни с поддержкой действительных и комплексных чисел. Можно задать точность.</div>
+
+        <div class="label">
+            <div id="inputTxt">Введите число:</div>
+        </div>
+
+        <input type="text" id="input" placeholder="Например: 25, 3.14, 2+3i">
+
+        <div class="cont1">
+            <label id="precisionLabel" for="precision">Точность:</label>
+            <input type="number" id="precision" min="1" max="10" value="5">
+            <button id="calcBtn">Вычислить корень</button>
+        </div>
+
+        <div id="error"></div>
+        <div id="result"></div>
+    </div>
+    </div>
+
+<script>
+    const texts = {
+    ru: {
+        title: "Калькулятор квадратных корней",
+        info: "Вычисляет квадратные корни с поддержкой действительных и комплексных чисел. Можно задать точность.",
+        inputLabel: "Введите число:",
+        placeholder: "Например: 25, 3.14, 2+3i",
+        precisionLabel: "Точность:",
+        button: "Вычислить корень",
+        langBtn: "English",
+        resultInput: "Введено:",
+        root: "Корень",
+        errorEmpty: "Пожалуйста введите число",
+        errorInvalid: "Некорректный ввод"
+    },
+    en: {
+        title: "Square Root Calculator",
+        info: "Calculates square roots of real and complex numbers. Precision is customizable.",
+        inputLabel: "Enter a number:",
+        placeholder: "Example: 25, 3.14, 2+3i",
+        precisionLabel: "Precision:",
+        button: "Calculate Root",
+        langBtn: "Русский",
+        resultInput: "Input:",
+        root: "Root",
+        errorEmpty: "Please enter a number",
+        errorInvalid: "Invalid input"
+    }
+    };
+
+    let currentLang = 'ru';
+
+    const titleEl = document.getElementById('titleTxt');
+    const infoEl = document.getElementById('infoTxt');
+    const inputLabelEl = document.getElementById('inputTxt');
+    const inputField = document.getElementById("input");
+    const precisionLabelEl = document.getElementById("precisionLabel");
+    const precisionInput = document.getElementById("precision");
+    const calcBtnEl = document.getElementById('calcBtn');
+    const langBtnEl = document.getElementById('langBtn');
+    const errorEl = document.getElementById('error');
+    const resultEl = document.getElementById('result');
+
+    function updateLanguage() {
+        const t = texts[currentLang];
+        titleEl.textContent = t.title;
+        infoEl.textContent = t.info;
+        inputLabelEl.textContent = t.inputLabel;
+        inputField.placeholder = t.placeholder;
+        precisionLabelEl.textContent = t.precisionLabel;
+        calcBtnEl.textContent = t.button;
+        langBtnEl.textContent = t.langBtn;
+    }
+
+    langBtnEl.addEventListener('click', () => {
+        currentLang = currentLang === 'ru' ? 'en' : 'ru';
+        updateLanguage();
+        if (resultEl.innerHTML.trim() !== "") {
+            calculate();
+        }
+    });
+
+    function parseNumber(str) {
+      
+        str = str.trim().replace(/\s+/g, "");
+        if (!str) return null;
+        if (!isNaN(str)) return { r: parseFloat(str), i: 0 };
+        if (str === "i" || str === "+i") return { r: 0, i: 1 };
+        if (str === "-i") return { r: 0, i: -1 };
+
+        let match = str.match(/^([+-]?\d+(\.\d+)?)([+-](\d+(\.\d+)?)?)i$/);
+        if (match) {
+        const r = parseFloat(match[1]);
+        let iPart = match[4];
+        let i = iPart === undefined ? 1 : parseFloat(iPart);
+        if (match[3][0] === '-') i = -i;
+        return { r: r, i: i };
+        }
+
+        match = str.match(/^([+-]?\d+(\.\d+)?)i$/);
+        if (match) return { r: 0, i: parseFloat(match[1]) };
+      
+        return null;
+    }
+
+    function sqrtComplex({ r, i }) {
+        if (i === 0) {
+            if (r >= 0) return [{ r: Math.sqrt(r), i: 0 }];
+            return [{ r: 0, i: Math.sqrt(-r) }, { r: 0, i: -Math.sqrt(-r) }];
+        }
+        const mod = Math.sqrt(r * r + i * i);
+        const arg = Math.atan2(i, r);
+        const root = Math.sqrt(mod);
+        return [
+        { r: root * Math.cos(arg / 2), i: root * Math.sin(arg / 2) },
+        { r: root * Math.cos(arg / 2 + Math.PI), i: root * Math.sin(arg / 2 + Math.PI) }
+        ];
+    }
+
+    function fmt({ r, i }, prec) {
+        const fix = n => Math.abs(n) < 1e-10 ? 0 : +n.toFixed(prec);
+        r = fix(r);
+        i = fix(i);
+        if (i === 0) return r.toString();
+        if (r === 0) return (i === 1 ? "i" : i === -1 ? "-i" : i + "i");
+        return r + (i > 0 ? "+" : "") + (i === 1 ? "i" : i === -1 ? "-i" : i + "i");
+    }
+
+    function showResult(roots, inputVal, prec) {
+        const t = texts[currentLang];
+        resultEl.innerHTML = `
+            <div class="resultItem">${t.resultInput} <span class="resultValue">${inputVal}</span></div>
+            ${roots.map((x, id) => `<div class="resultItem">${t.root} ${id + 1}: <span class="resultValue">${fmt(x, prec)}</span></div>`).join("")}
+        `;
+    }
+
+    function calculate() {
+        errorEl.textContent = "";
+        resultEl.innerHTML = "";
+
+        const val = inputField.value.trim();
+        if (!val) {
+            errorEl.textContent = texts[currentLang].errorEmpty;
+            return;
+        }
+
+        const num = parseNumber(val);
+        if (!num) {
+            errorEl.textContent = texts[currentLang].errorInvalid;
+            return;
+        }
+
+        const prec = parseInt(precisionInput.value) || 5;
+        const roots = sqrtComplex(num);
+        showResult(roots, val, prec);
+    }
+
+    calcBtnEl.addEventListener("click", calculate);
+    inputField.addEventListener("keypress", e => { if (e.key === "Enter") calculate(); });
+    updateLanguage();
+    inputField.focus();
+  </script>
+</body>
+</html>
