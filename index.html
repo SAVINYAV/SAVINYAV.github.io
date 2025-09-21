@@ -199,17 +199,19 @@
         <input type="text" id="input" placeholder="Например: 25, 3.14, 2+3i">
 
         <div class="cont1">
-            <label id="precisionLabel" for="precision">Точность:</label>
+            <label id="precisionLabel">Точность:</label>
             <input type="number" id="precision" min="1" max="10" value="5">
             <button id="calcBtn">Вычислить корень</button>
         </div>
 
         <div id="error"></div>
         <div id="result"></div>
+        <a href="https://t.me/sqrtcalc" style="text-align: center; color: #000;">t.me/sqrtcalc</a>
     </div>
     </div>
 
 <script>
+    //локализация (сюда можно добавить языки, но только в код)
     const texts = {
     ru: {
         title: "Калькулятор квадратных корней",
@@ -241,6 +243,7 @@
 
     let currentLang = 'ru';
 
+    //импорт элементов
     const titleEl = document.getElementById('titleTxt');
     const infoEl = document.getElementById('infoTxt');
     const inputLabelEl = document.getElementById('inputTxt');
@@ -252,6 +255,7 @@
     const errorEl = document.getElementById('error');
     const resultEl = document.getElementById('result');
 
+    //смена языка
     function updateLanguage() {
         const t = texts[currentLang];
         titleEl.textContent = t.title;
@@ -263,6 +267,7 @@
         langBtnEl.textContent = t.langBtn;
     }
 
+    //добавление функции смены языка на кнопку
     langBtnEl.addEventListener('click', () => {
         currentLang = currentLang === 'ru' ? 'en' : 'ru';
         updateLanguage();
@@ -271,15 +276,16 @@
         }
     });
 
+    //разбиение числа на реальную и мнимую части
     function parseNumber(str) {
       
-        str = str.trim().replace(/\s+/g, "");
+        str = str.trim().replace(/\s+/g, ""); //убираем лишние пробелы
         if (!str) return null;
         if (!isNaN(str)) return { r: parseFloat(str), i: 0 };
         if (str === "i" || str === "+i") return { r: 0, i: 1 };
         if (str === "-i") return { r: 0, i: -1 };
 
-        let match = str.match(/^([+-]?\d+(\.\d+)?)([+-](\d+(\.\d+)?)?)i$/);
+        let match = str.match(/^([+-]?\d+(\.\d+)?)([+-](\d+(\.\d+)?)?)i$/); //проверка по шаблону
         if (match) {
         const r = parseFloat(match[1]);
         let iPart = match[4];
@@ -288,12 +294,13 @@
         return { r: r, i: i };
         }
 
-        match = str.match(/^([+-]?\d+(\.\d+)?)i$/);
+        match = str.match(/^([+-]?\d+(\.\d+)?)i$/); //второй шаблон
         if (match) return { r: 0, i: parseFloat(match[1]) };
       
         return null;
     }
 
+    //ищем сами корни по мат. формулам
     function sqrtComplex({ r, i }) {
         if (i === 0) {
             if (r >= 0) return [{ r: Math.sqrt(r), i: 0 }];
@@ -308,6 +315,7 @@
         ];
     }
 
+    //форматируем число, 
     function fmt({ r, i }, prec) {
         const fix = n => Math.abs(n) < 1e-10 ? 0 : +n.toFixed(prec);
         r = fix(r);
@@ -317,6 +325,7 @@
         return r + (i > 0 ? "+" : "") + (i === 1 ? "i" : i === -1 ? "-i" : i + "i");
     }
 
+    //показ ответа на фронтенде
     function showResult(roots, inputVal, prec) {
         const t = texts[currentLang];
         resultEl.innerHTML = `
@@ -325,6 +334,7 @@
         `;
     }
 
+    //главная функция, вызывает остальные
     function calculate() {
         errorEl.textContent = "";
         resultEl.innerHTML = "";
@@ -346,10 +356,10 @@
         showResult(roots, val, prec);
     }
 
-    calcBtnEl.addEventListener("click", calculate);
+    calcBtnEl.addEventListener("click", calculate); //к кнопке "вычислить" прикрепляем запуск главной функции calculate()
     inputField.addEventListener("keypress", e => { if (e.key === "Enter") calculate(); });
-    updateLanguage();
-    inputField.focus();
+    updateLanguage(); //начальное обновление языка
+    inputField.focus(); //курсор сразу на поле ввода
   </script>
 </body>
 </html>
